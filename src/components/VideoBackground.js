@@ -1,7 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { API_OPTIONS } from "../config/app_config";
+import { useDispatch, useSelector } from "react-redux";
+import { addMovieTrailer } from "../redux/slice/moviesSlice";
 
 const VideoBackground = ({ movieId }) => {
+  //   const [trailerId, setTrailerId] = useState(null);
+  const dispatch = useDispatch();
+
+  //to fetch and display the video
+  const trailerVideo = useSelector((store) => store.movies?.movieTrailer);
+
   const getMovieTrailer = async () => {
     const data = await fetch(
       "https://api.themoviedb.org/3/movie/693134/videos",
@@ -16,6 +24,8 @@ const VideoBackground = ({ movieId }) => {
 
     //if type===trailer then show filterData[0] else any type of video, i.e, (json.results[0])
     const trailer = filterData.length ? filterData[0] : json.results[0];
+    // setTrailerId(trailer.key);
+    dispatch(addMovieTrailer(trailer));
     console.log(trailer);
   };
 
@@ -28,7 +38,7 @@ const VideoBackground = ({ movieId }) => {
       <iframe
         width="560"
         height="315"
-        src="https://www.youtube.com/embed/U2Qp5pL3ovA?si=7ydSC-uMFE1n6yz4"
+        src={"https://www.youtube.com/embed/" + trailerVideo?.key}
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin"
