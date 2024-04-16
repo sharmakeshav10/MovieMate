@@ -1,7 +1,15 @@
 import React from "react";
+import useNowPlayingMovies from "../hooks/useNowPlayingMovies";
+import Spotlight from "./Spotlight";
 
 const Browse = () => {
-  return <div>Browse</div>;
+  useNowPlayingMovies();
+
+  return (
+    <div>
+      <Spotlight />
+    </div>
+  );
 };
 
 export default Browse;

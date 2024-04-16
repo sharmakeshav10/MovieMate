@@ -6,15 +6,60 @@ import {
   NEW_TO_NETFLIX,
   SIGN_IN_NOW,
   SIGN_IN_TITLE,
-  SIGN_UP_NOW,
   SIGN_UP_TITLE,
 } from "../utils/constants/app_strings";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
 
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleAuthForms = () => {
     setIsSignIn(!isSignIn);
+  };
+
+  const handleInputChange = (e) => {
+    // console.log(e.target);
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+    console.log(formData);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formData));
+  };
+
+  const validate = (values) => {
+    const errors = {};
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+    if (!values.username) {
+      errors.username = "Username is required";
+    }
+    if (!values.email) {
+      errors.email = "Email is required";
+    } else if (!emailRegex.test(values.email)) {
+      errors.email = "Please provide a valid email.";
+    }
+    if (!values.password) {
+      errors.password = "Password is required";
+    } else if (values.password.length < 6) {
+      errors.password = "Password must be greater than 6 digits.";
+    }
+
+    return errors;
   };
 
   return (
@@ -27,35 +72,46 @@ const Login = () => {
         />
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <form className="w-3/12 p-12 bg-black bg-opacity-70">
+        <pre className="text-white">{JSON.stringify(formData)}</pre>
+        <form
+          className="w-3/12 p-12 bg-black bg-opacity-70"
+          onSubmit={handleSubmit}
+        >
           <h1 className="text-white text-3xl font-bold mb-8">
             {isSignIn ? SIGN_IN_TITLE : SIGN_UP_TITLE}
           </h1>
           {!isSignIn && (
-            <div className="flex">
+            <>
               <input
                 type="text"
-                placeholder="First Name"
-                className="w-full mb-4 mr-2 px-2 py-3 border-none rounded"
+                placeholder="User Name"
+                className="w-full mb-2 mr-2 px-2 py-3 border-none rounded"
+                name="username"
+                value={formData.userName}
+                onChange={handleInputChange}
               />
-              <input
-                type="text"
-                placeholder="Last Name"
-                className="w-full mb-4 px-2 py-3 border-none rounded"
-              />
-            </div>
+              <p className="text-red-600 mb-4">{formErrors.username}</p>
+            </>
           )}
 
           <input
             type="text"
             placeholder={LOGIN_EMAIL_PLACEHOLDER}
-            className="w-full mb-4 px-2 py-3 border-none rounded"
+            className="w-full mb-2 px-2 py-3 border-none rounded"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
           />
+          <p className="text-red-600 mb-4">{formErrors.email}</p>
           <input
             type="password"
             placeholder={LOGIN_PASSWORD_PLACEHOLDER}
-            className="w-full mb-4 px-2 py-3 border rounded"
+            className="w-full mb-2 px-2 py-3 border rounded"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
           />
+          <p className="text-red-600 mb-4">{formErrors.password}</p>
           <div>
             <button className="bg-red-600 w-full mb-4 p-2 border-none rounded text-white font-semibold">
               {isSignIn ? SIGN_IN_TITLE : SIGN_UP_TITLE}
