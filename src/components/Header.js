@@ -1,12 +1,19 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleGptSearchView } from "../redux/slice/gptSearchSlice";
+import { SUPPORTED_LANGUAGES } from "../utils/constants/app_constants";
+import { changeLanguage } from "../redux/slice/configSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
   const gptSearchHandler = () => {
     //toggle gpt search
     dispatch(toggleGptSearchView());
+  };
+
+  const langChangeHandler = (e) => {
+    dispatch(changeLanguage(e.target.value));
   };
 
   return (
@@ -17,6 +24,20 @@ const Header = () => {
         alt="app-logo"
       />
       <div className="flex justify-between">
+        {/* only show lang support if on gptsearchpage */}
+        {showGptSearch && (
+          <select
+            className="mr-2 bg-black text-white p-2"
+            onChange={langChangeHandler}
+          >
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <option key={lang.identifier} value={lang.identifier}>
+                {lang.name}
+              </option>
+            ))}
+          </select>
+        )}
+
         <button className="bg-white" onClick={gptSearchHandler}>
           GPT Search
         </button>
