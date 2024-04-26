@@ -4,7 +4,7 @@ import MovieCard from "./MovieCard";
 const MovieList = ({ title, movies }) => {
   console.log(movies[0].poster_path);
   return (
-    <div className="py-2 px-6">
+    <div className="py-2 px-16">
       <h1 className="text-white py-3 text-xl">{title}</h1>
       <div className="flex overflow-x-scroll">
         <div className="flex">
